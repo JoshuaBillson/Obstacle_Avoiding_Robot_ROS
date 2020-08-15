@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+
+from obstacle_avoiding_robot import robot_control
+
+if __name__ == "__main__":
+	robot_control()
