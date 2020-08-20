@@ -46,7 +46,7 @@ def get_distance(data):
     DISTANCE = data.data
 
 
-def generate_message(speed, turn):
+def generate_message(Message, **kwargs):
     """
     Generate a message to be published to the motor controller.
 
@@ -54,35 +54,35 @@ def generate_message(speed, turn):
     turn (int): The turn value.
     returns: A MixedCommand message.
     """
-    message = MixedCommand()
-    message.speed = speed
-    message.turn = turn
+    message = Message()
+    for key, value in kwargs.items():
+        setattr(message, key, value)
     return message
 
 
 def stop():
     global motors
-    motors.publish(generate_message(0, 0))
+    motors.publish(generate_message(MixedCommand, speed=0, turn=0))
 
 
 def turn_left():
     global motors
-    motors.publish(generate_message(0, -50))
+    motors.publish(generate_message(MixedCommand, speed=0, turn=-50))
 
 
 def turn_right():
     global motors
-    motors.publish(generate_message(0, 50))
+    motors.publish(generate_message(MixedCommand, speed=0, turn=50))
 
 
 def forward():
     global motors
-    motors.publish(generate_message(100, 0))
+    motors.publish(generate_message(MixedCommand, speed=100, turn=0))
 
 
 def reverse():
     global motors
-    motors.publish(generate_message(-100, 0))
+    motors.publish(generate_message(MixedCommand, speed=-100, turn=0))
 
 
 def setup():
