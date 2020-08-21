@@ -46,47 +46,39 @@ def get_distance(data):
     DISTANCE = data.data
 
 
-def generate_message(Message, **kwargs):
-    """
-    Generate a message to be published to the motor controller.
-
-    speed (int): The speed value.
-    turn (int): The turn value.
-    returns: A MixedCommand message.
-    """
-    message = Message()
-    for key, value in kwargs.items():
-        setattr(message, key, value)
-    return message
-
-
 def stop():
+    """Stop The Robot"""
     global motors
-    motors.publish(generate_message(MixedCommand, speed=0, turn=0))
+    motors.publish(MixedCommand(speed=0, turn=0))
+    sleep(1.5)
 
 
 def turn_left():
+    """Turn The Robot Left"""
     global motors
-    motors.publish(generate_message(MixedCommand, speed=0, turn=-50))
+    motors.publish(MixedCommand(speed=0, turn=-50))
 
 
 def turn_right():
+    """Turn The Robot Right"""
     global motors
-    motors.publish(generate_message(MixedCommand, speed=0, turn=50))
+    motors.publish(MixedCommand(speed=0, turn=50))
 
 
 def forward():
+    """Drive The Robot Forward"""
     global motors
-    motors.publish(generate_message(MixedCommand, speed=100, turn=0))
+    motors.publish(MixedCommand(speed=100, turn=0))
 
 
 def reverse():
+    """Drive The Robot In Reverse"""
     global motors
-    motors.publish(generate_message(MixedCommand, speed=-100, turn=0))
+    motors.publish(MixedCommand(speed=-100, turn=0))
 
 
 def setup():
-    """ Setup Routine """
+    """Setup Routine"""
     # Initialize Subscribers
     rospy.Subscriber('ultrasonic_sensor', Int16, get_distance)
 
@@ -98,21 +90,17 @@ def setup():
 
 
 def loop():
-    """ Main Program Loop """
+    """Main Program Loop"""
     global DISTANCE, THRESHOLD, TURN_DELAY 
-    RATE = 10
     while not rospy.is_shutdown():
-        if DISTANCE > THRESHOLD:
+        while DISTANCE > THRESHOLD:
             forward()
-        else:
-            stop()
-            sleep(2)
-            while DISTANCE <= THRESHOLD:
-                turn_left()
-            sleep(TURN_DELAY)
-            stop()
-            sleep(2)
-        sleep(1 / RATE)
+            sleep(0.1)
+        stop()
+        while DISTANCE <= THRESHOLD:
+            turn_left()
+        sleep(TURN_DELAY)
+        stop()
 
 
 def robot_control():
