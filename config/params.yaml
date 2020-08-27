@@ -1,0 +1,2 @@
+motor_controller/port: "/dev/ttyACM0"
+motor_controller/duty_cycle: 1.0

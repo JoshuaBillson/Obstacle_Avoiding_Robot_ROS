@@ -1,8 +1,9 @@
 <launch>
-	<arg name="sensor_port" value="/dev/ttyUSB0" />
-	<arg name="motor_port" value="/dev/ttyACM0" />
+	<rosparam file="$(find obstacle_avoiding_robot)/config/params.yaml" />
 
-	<node pkg="vnh5019_motor_controller" type="serial_transmitter" name="motor_controller" args="$(arg motor_port)" />
+	<arg name="sensor_port" value="/dev/ttyUSB0" />
+
+	<node pkg="vnh5019_motor_controller" type="vnh5019_write_serial" name="motor_controller" />
 	<node pkg="rosserial_python" type="serial_node.py" name="serial_node_1" args="$(arg sensor_port)" />
 	<node pkg="obstacle_avoiding_robot" type="robot_control" name="robot_control" />
 </launch>
